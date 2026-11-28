@@ -1,0 +1,500 @@
+CREATE DATABASE shopping_management;
+USE shopping_management;
+
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
+    stock_quantity INT NOT NULL CHECK (stock_quantity >= 0),
+    supplier VARCHAR(100),
+    created_date DATE DEFAULT (CURRENT_DATE)
+);
+
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    city VARCHAR(50),
+    age INT CHECK (age >= 18),
+    registration_date DATE DEFAULT (CURRENT_DATE)
+);
+
+CREATE TABLE sales (
+    sale_id INT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    total_amount DECIMAL(10,2) NOT NULL CHECK (total_amount >= 0),
+    payment_mode VARCHAR(30) DEFAULT 'Cash',
+    sale_date DATE DEFAULT (CURRENT_DATE),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+SHOW DATABASES;
+USE shopping_management;
+SHOW TABLES;
+
+DESCRIBE products;
+DESCRIBE customers;
+DESCRIBE sales;
+
+
+
+
+INSERT INTO products
+(product_id, product_name, category, price, stock_quantity, supplier, created_date)
+VALUES
+(1, 'Smartphone', 'Electronics', 25000, 20, 'TechWorld', '2025-01-01'),
+(2, 'Laptop', 'Electronics', 65000, 8, 'TechSource', '2025-01-02'),
+(3, 'Headphones', 'Electronics', 2500, 30, 'SoundTech', '2025-01-03'),
+(4, 'Smart Watch', 'Electronics', 7000, 12, 'TechWorld', '2025-01-04'),
+(5, 'Keyboard', 'Electronics', 1500, 25, 'ComputerTech', '2025-01-05'),
+(6, 'Office Chair', 'Furniture', 8500, 6, 'ComfortHome', '2025-01-06'),
+(7, 'Study Table', 'Furniture', 12000, 10, 'WoodWorks', '2025-01-07'),
+(8, 'Sofa', 'Furniture', 35000, 4, 'ComfortHome', '2025-01-08'),
+(9, 'T-Shirt', 'Clothing', 800, 50, 'StyleTech', '2025-01-09'),
+(10, 'Shoes', 'Clothing', 3000, 18, 'StepUp', '2025-01-10'),
+(11, 'Jacket', 'Clothing', 5000, 9, 'StyleTech', '2025-01-11'),
+(12, 'Backpack', 'Accessories', 1800, 22, 'BagTech', '2025-01-12'),
+(13, 'Sunglasses', 'Accessories', 2200, 15, 'VisionTech', '2025-01-13'),
+(14, 'Phone Case', 'Accessories', 500, 40, 'MobileTech', '2025-01-14'),
+(15, 'Printer', 'Electronics', 15000, 7, 'PrintTech', '2025-01-15');
+
+
+
+
+INSERT INTO customers
+(customer_id, customer_name, email, city, age, registration_date)
+VALUES
+(1, 'Ananya', 'ananya@gmail.com', 'Bangalore', 22, '2025-01-01'),
+(2, 'Arun', 'arun@gmail.com', 'Chennai', 25, '2025-01-02'),
+(3, 'Priya', 'priya@gmail.com', 'Mysore', 28, '2025-01-03'),
+(4, 'Kiran', 'kiran@gmail.com', 'Hyderabad', 30, '2025-01-04'),
+(5, 'Sneha', 'sneha@gmail.com', 'Bangalore', 24, '2025-01-05'),
+(6, 'Rahul', 'rahul@gmail.com', 'Chennai', 27, '2025-01-06'),
+(7, 'Meena', 'meena@gmail.com', 'Mysore', 21, '2025-01-07'),
+(8, 'Suresh', 'suresh@gmail.com', 'Mumbai', 29, '2025-01-08'),
+(9, 'Divya', 'divya@gmail.com', 'Pune', 23, '2025-01-09'),
+(10, 'Akhil', 'akhil@gmail.com', 'Bangalore', 26, '2025-01-10'),
+(11, 'Ravi', 'ravi@gmail.com', 'Chennai', 31, '2025-01-11'),
+(12, 'Kavya', 'kavya@gmail.com', 'Mysore', 20, '2025-01-12'),
+(13, 'Manoj', 'manoj@gmail.com', 'Delhi', 28, '2025-01-13'),
+(14, 'Anusha', 'anusha@gmail.com', 'Hyderabad', 22, '2025-01-14'),
+(15, 'Vikram', 'vikram@gmail.com', 'Mumbai', 30, '2025-01-15');
+
+
+
+SELECT * FROM products;
+SELECT * FROM customers;
+SELECT * FROM sales;
+
+
+
+INSERT INTO customers
+(customer_id, customer_name, email, city, age)
+VALUES
+(16, 'Nisha', 'nisha@gmail.com', 'Bangalore', 24);
+
+
+// All products
+SELECT * FROM products;
+
+// Product names and prices
+SELECT product_name, price FROM products;
+
+// Unique categories
+SELECT DISTINCT category FROM products;
+
+// Products costing more than 5000
+SELECT * FROM products WHERE price > 5000;
+
+// Products costing less than 2000
+SELECT * FROM products WHERE price < 2000;
+
+// Electronics products
+SELECT * FROM products WHERE category = 'Electronics';
+
+// Products with stock below 10
+SELECT * FROM products WHERE stock_quantity < 10;
+
+// Electronics products costing more than 10000
+SELECT * FROM products
+WHERE category = 'Electronics' AND price > 10000;
+
+// Electronics or Furniture products
+SELECT * FROM products
+WHERE category = 'Electronics' OR category = 'Furniture';
+
+// Products not in Clothing
+SELECT * FROM products
+WHERE NOT category = 'Clothing';
+
+
+
+
+// Product names starting with S
+SELECT * FROM products WHERE product_name LIKE 'S%';
+
+// Product names ending with e
+SELECT * FROM products WHERE product_name LIKE '%e';
+
+// Product names containing Phone
+SELECT * FROM products WHERE product_name LIKE '%Phone%';
+
+// Customer names starting with A
+SELECT * FROM customers WHERE customer_name LIKE 'A%';
+
+// Customers from Bangalore, Chennai, or Mysore
+SELECT * FROM customers
+WHERE city IN ('Bangalore', 'Chennai', 'Mysore');
+
+// Products priced between 1000 and 10000
+SELECT * FROM products
+WHERE price BETWEEN 1000 AND 10000;
+
+// Customers aged between 20 and 30
+SELECT * FROM customers
+WHERE age BETWEEN 20 AND 30;
+
+// Suppliers whose names contain Tech
+SELECT * FROM products
+WHERE supplier LIKE '%Tech%';
+
+
+
+// Products by price ascending
+SELECT * FROM products ORDER BY price ASC;
+
+// Products by price descending
+SELECT * FROM products ORDER BY price DESC;
+
+// Five most expensive products
+SELECT * FROM products ORDER BY price DESC LIMIT 5;
+
+// Five cheapest products
+SELECT * FROM products ORDER BY price ASC LIMIT 5;
+
+// Customers alphabetically
+SELECT * FROM customers ORDER BY customer_name ASC;
+
+// Latest ten sales transactions
+SELECT * FROM sales ORDER BY sale_date DESC, sale_id DESC LIMIT 10;
+
+// Products sorted by stock quantity
+SELECT * FROM products ORDER BY stock_quantity ASC;
+
+
+
+
+
+// Update the price of a particular product
+UPDATE products
+SET price = 27000
+WHERE product_id = 1;
+
+// Increase all Electronics prices by 10%
+UPDATE products
+SET price = price * 1.10
+WHERE category = 'Electronics';
+
+// Update stock quantity
+UPDATE products
+SET stock_quantity = 25
+WHERE product_id = 3;
+
+// Change a customer's city
+UPDATE customers
+SET city = 'Chennai'
+WHERE customer_id = 1;
+
+// Update a customer's email
+UPDATE customers
+SET email = 'ananya.new@gmail.com'
+WHERE customer_id = 1;
+
+// Change payment mode of a sale
+UPDATE sales
+SET payment_mode = 'UPI'
+WHERE sale_id = 1;
+
+
+
+SELECT * FROM sales WHERE product_id = 15;
+
+// Delete only if the SELECT above returns no rows
+DELETE FROM products
+WHERE product_id = 15;
+
+
+
+SELECT * FROM sales WHERE customer_id = 15;
+
+// Delete their sales first, if you intend to remove those transactions
+DELETE FROM sales WHERE customer_id = 15;
+
+// Then delete the customer
+DELETE FROM customers WHERE customer_id = 15;
+
+
+
+
+DELETE FROM sales
+WHERE sale_date < '2025-02-01';
+
+
+
+// Add discount percentage
+ALTER TABLE products
+ADD discount_percentage DECIMAL(5,2) DEFAULT 0;
+
+// Add customer mobile number
+ALTER TABLE customers
+ADD mobile_number VARCHAR(15);
+
+// Modify supplier datatype
+ALTER TABLE products
+MODIFY supplier VARCHAR(150);
+
+// Rename created_date
+ALTER TABLE products
+RENAME COLUMN created_date TO product_added_date;
+
+// Add product status with default value
+ALTER TABLE products
+ADD product_status VARCHAR(20) DEFAULT 'Available';
+
+// Drop an unnecessary column
+ALTER TABLE customers
+DROP COLUMN mobile_number;
+
+// Display modified structures
+DESCRIBE products;
+DESCRIBE customers;
+DESCRIBE sales;
+
+
+
+// Total number of products
+SELECT COUNT(*) AS total_products FROM products;
+
+// Total number of customers
+SELECT COUNT(*) AS total_customers FROM customers;
+
+// Total number of sales
+SELECT COUNT(*) AS total_sales FROM sales;
+
+// Total revenue
+SELECT SUM(total_amount) AS total_revenue FROM sales;
+
+// Average product price
+SELECT AVG(price) AS average_product_price FROM products;
+
+// Most expensive product
+SELECT product_name, price
+FROM products
+ORDER BY price DESC
+LIMIT 1;
+
+// Cheapest product
+SELECT product_name, price
+FROM products
+ORDER BY price ASC
+LIMIT 1;
+
+// Highest sales transaction amount
+SELECT MAX(total_amount) AS highest_transaction
+FROM sales;
+
+// Total quantity of products sold
+SELECT SUM(quantity) AS total_quantity_sold
+FROM sales;
+
+// Average sales transaction value
+SELECT AVG(total_amount) AS average_transaction_value
+FROM sales;
+
+
+
+
+
+// Count products in each category
+SELECT category, COUNT(*) AS product_count
+FROM products
+GROUP BY category;
+
+// Average product price category-wise
+SELECT category, AVG(price) AS average_price
+FROM products
+GROUP BY category;
+
+// Total stock quantity category-wise
+SELECT category, SUM(stock_quantity) AS total_stock
+FROM products
+GROUP BY category;
+
+// Total revenue category-wise
+SELECT p.category, SUM(s.total_amount) AS total_revenue
+FROM products p
+INNER JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.category;
+
+// Number of sales transactions for each payment mode
+SELECT payment_mode, COUNT(*) AS transaction_count
+FROM sales
+GROUP BY payment_mode;
+
+// Total sales quantity for each product
+SELECT p.product_name, SUM(s.quantity) AS total_quantity_sold
+FROM products p
+INNER JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.product_id, p.product_name;
+
+// Categories having more than three products
+SELECT category, COUNT(*) AS product_count
+FROM products
+GROUP BY category
+HAVING COUNT(*) > 3;
+
+// Products whose total sold quantity is greater than 5
+SELECT p.product_name, SUM(s.quantity) AS total_quantity_sold
+FROM products p
+INNER JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.product_id, p.product_name
+HAVING SUM(s.quantity) > 5;
+
+// Payment modes with more than five transactions
+SELECT payment_mode, COUNT(*) AS transaction_count
+FROM sales
+GROUP BY payment_mode
+HAVING COUNT(*) > 5;
+
+
+
+
+
+
+
+// Product Inventory Report
+SELECT product_id, product_name, category, stock_quantity
+FROM products;
+
+// Low Stock Report
+SELECT * FROM products
+WHERE stock_quantity < 10;
+
+// Category Report
+SELECT category, COUNT(*) AS product_count
+FROM products
+GROUP BY category;
+
+// Product Price Report: highest and lowest
+SELECT product_name, price
+FROM products
+WHERE price = (SELECT MAX(price) FROM products)
+   OR price = (SELECT MIN(price) FROM products);
+
+// Customer Report
+SELECT * FROM customers;
+
+// Sales Report
+SELECT s.sale_id, c.customer_name, p.product_name,
+       s.quantity, s.total_amount, s.payment_mode, s.sale_date
+FROM sales s
+JOIN customers c ON s.customer_id = c.customer_id
+JOIN products p ON s.product_id = p.product_id;
+
+// Revenue Report
+SELECT SUM(total_amount) AS total_revenue
+FROM sales;
+
+// Payment-mode-wise sales
+SELECT payment_mode, SUM(total_amount) AS revenue
+FROM sales
+GROUP BY payment_mode;
+
+// Best-Selling Products
+SELECT p.product_name, SUM(s.quantity) AS total_quantity_sold
+FROM products p
+JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_quantity_sold DESC;
+
+// Customer-wise purchase totals
+SELECT c.customer_name, COALESCE(SUM(s.total_amount), 0) AS purchase_total
+FROM customers c
+LEFT JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, c.customer_name;
+
+
+
+
+// Product that generated the highest total revenue
+SELECT p.product_name, SUM(s.total_amount) AS total_revenue
+FROM products p
+JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_revenue DESC
+LIMIT 1;
+
+// Customer who made the highest-value purchase (single transaction)
+SELECT c.customer_name, s.sale_id, s.total_amount
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+ORDER BY s.total_amount DESC
+LIMIT 1;
+
+// Products that have never been sold
+SELECT p.product_id, p.product_name
+FROM products p
+LEFT JOIN sales s ON p.product_id = s.product_id
+WHERE s.product_id IS NULL;
+
+// Customers who have never made a purchase
+SELECT c.customer_id, c.customer_name
+FROM customers c
+LEFT JOIN sales s ON c.customer_id = s.customer_id
+WHERE s.customer_id IS NULL;
+
+// Category that generated the highest revenue
+SELECT p.category, SUM(s.total_amount) AS total_revenue
+FROM products p
+JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.category
+ORDER BY total_revenue DESC
+LIMIT 1;
+
+// Products with stock quantity below 5
+SELECT * FROM products
+WHERE stock_quantity < 5;
+
+// Total revenue through each payment mode
+SELECT payment_mode, SUM(total_amount) AS total_revenue
+FROM sales
+GROUP BY payment_mode;
+
+//.SELECT p.product_name, SUM(s.quantity) AS total_quantity_sold
+FROM products p
+JOIN sales s ON p.product_id = s.product_id
+GROUP BY p.product_id, p.product_name
+ORDER BY total_quantity_sold DESC
+LIMIT 5;
+
+// Customers who purchased more than one type of product
+SELECT c.customer_name, COUNT(DISTINCT s.product_id) AS product_types
+FROM customers c
+JOIN sales s ON c.customer_id = s.customer_id
+GROUP BY c.customer_id, c.customer_name
+HAVING COUNT(DISTINCT s.product_id) > 1;
+ Top five products based on total quantity sold
+
+// Monthly sales summary
+SELECT YEAR(sale_date) AS sales_year,
+       MONTH(sale_date) AS sales_month,
+       COUNT(*) AS transaction_count,
+       SUM(quantity) AS quantity_sold,
+       SUM(total_amount) AS monthly_revenue
+FROM sales
+GROUP BY YEAR(sale_date), MONTH(sale_date)
+ORDER BY sales_year, sales_month;
